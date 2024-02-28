@@ -10,6 +10,7 @@ public class Irasas {
     private final int id;
     private static int numOfRecords = 0;
 
+
     public Irasas(double suma, LocalDate data, String mokejimoBudas, String papildomaInfo) {
         this.suma = suma;
         this.data = data;
@@ -45,10 +46,14 @@ public class Irasas {
 
     }
 
+    public Irasas() {
+        this.id = numOfRecords++;
+    }
+
     public void redaguotiSumaKonsoleje(Scanner sc) {
         System.out.printf("Suma: %8.2f Eur %n", getSuma());
         System.out.print("[R] - Redaguoti, [AnyKey] - Toliau: ");
-        if (sc.nextLine().toUpperCase().substring(0, 1).equals("R")) {
+        if (sc.nextLine().toUpperCase().charAt(0) == 'R') {
             System.out.print("Įveskite naują reikšmę: ");
             try {
                 setSuma(Double.parseDouble(sc.nextLine()));
@@ -62,7 +67,7 @@ public class Irasas {
     public void redaguotiDataKonsoleje(Scanner sc) {
         System.out.printf("Data: %s %n", getData());
         System.out.print("[R] - Redaguoti, [AnyKey] - Toliau: ");
-        if (sc.nextLine().toUpperCase().substring(0, 1).equals("R")) {
+        if (sc.nextLine().toUpperCase().charAt(0) == 'R') {
             System.out.print("Redaguoti datą (formatu YYYY-MM-DD): ");
             try {
                 setData(LocalDate.parse(sc.nextLine()));
@@ -76,7 +81,7 @@ public class Irasas {
     public void redaguotiPiniguFormaKonsoleje(Scanner sc) {
         System.out.printf("Mokėjimo būdas: %s %n", getMokejimoBudas());
         System.out.print("[R] - Redaguoti, [AnyKey] - Toliau: ");
-        if (sc.nextLine().toUpperCase().substring(0, 1).equals("R")) {
+        if (sc.nextLine().toUpperCase().charAt(0) == 'R') {
             System.out.print("Redaguoti mokėjimo būda (grynais/pavedimu): ");
             setMokejimoBudas(sc.nextLine());
         }
@@ -88,7 +93,7 @@ public class Irasas {
         if (this instanceof PajamuIrasas) {
             System.out.printf("Pajamų kategorija: %s %n", ((PajamuIrasas) this).getPajamuKategorija());
             System.out.print("[R] - Redaguoti, [AnyKey] - Toliau: ");
-            if (sc.nextLine().toUpperCase().substring(0, 1).equals("R")) {
+            if (sc.nextLine().toUpperCase().charAt(0) == 'R') {
                 System.out.print("Redaguoti pajamų kategoriją: ");
                 try {
                     ((PajamuIrasas) this).setPajamuKategorija(Integer.parseInt(sc.nextLine()));
@@ -103,7 +108,7 @@ public class Irasas {
         if (this instanceof IslaiduIrasas) {
             System.out.printf("Išlaidų kategorija: %s %n", ((IslaiduIrasas) this).getIslaiduKategorija());
             System.out.print("[R] - Redaguoti, [AnyKey] - Toliau: ");
-            if (sc.nextLine().toUpperCase().substring(0, 1).equals("R")) {
+            if (sc.nextLine().toUpperCase().charAt(0) == 'R') {
                 System.out.print("Redaguoti išlaidų kategoriją: ");
                 try {
                     ((IslaiduIrasas) this).setIslaiduKategorija(Integer.parseInt(sc.nextLine()));
@@ -119,7 +124,7 @@ public class Irasas {
     public void redaguotiPapildomaInfoKonsoleje(Scanner sc) {
         System.out.printf("Papildoma informacija: %s %n", getPapildomaInfo());
         System.out.print("[R] - Redaguoti, [AnyKey] - Toliau: ");
-        if (sc.nextLine().toUpperCase().substring(0, 1).equals("R")) {
+        if (sc.nextLine().toUpperCase().charAt(0) == 'R') {
             System.out.print("Redaguoti papildomą informaciją: ");
             setPapildomaInfo(sc.nextLine());
         }
