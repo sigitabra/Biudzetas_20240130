@@ -1,3 +1,7 @@
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,6 +76,7 @@ public class Biudzetas {
     }
 
     public double balansas() {
+        spausdintiVisusIrasus();
         double total = 0;
         for (Irasas i : irasuSarasas) {
             total += i.getSuma();
@@ -123,6 +128,16 @@ public class Biudzetas {
 
 
     public static void issaugotiDuomenis(ArrayList<Irasas> array, String path) throws IOException {
+        if (path.contains(".json")) {
+            issaugotiDuomenisIJson(array, path);
+        } else if (path.contains(".csv") || path.contains(".txt")) {
+            issaugotiDuomenisICsv(array, path);
+        } else {
+            System.out.println("Deja, tokiu formatu duomenų išsaugoti nėra galimybės");
+        }
+    }
+
+    public static void issaugotiDuomenisICsv(ArrayList<Irasas> array, String path) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, false))) {
             for (Irasas i : array) {
                 if (i instanceof PajamuIrasas) {
@@ -142,27 +157,53 @@ public class Biudzetas {
         }
     }
 
+    public static void issaugotiDuomenisIJson(ArrayList<Irasas> array, String path) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.writeValue(new File(path), array);
+    }
+
+
     public static ArrayList<Irasas> gautiDuomenis(String path) throws IOException {
+        if (path.contains(".json")) {
+            return gautiDuomenisIsJson(path);
+        } else if (path.contains(".csv")) {
+            return gautiDuomenisIsCsv(path);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public static ArrayList<Irasas> gautiDuomenisIsCsv(String path) throws IOException {
         ArrayList<Irasas> array = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
                 if (fields[0].equals("P")) {
-                    array.add(new PajamuIrasas(Double.valueOf(fields[3]), LocalDate.parse(fields[4]), fields[5], fields[5], Integer.valueOf(fields[1])));
+                    array.add(new PajamuIrasas(Double.parseDouble(fields[3]), LocalDate.parse(fields[4]), fields[5], fields[6], Integer.parseInt(fields[1])));
                 } else if
                 (fields[0].equals("I")) {
-                    array.add(new IslaiduIrasas(Double.valueOf(fields[3]), LocalDate.parse(fields[4]), fields[5], fields[5], Integer.valueOf(fields[1])));
+                    array.add(new IslaiduIrasas(Double.parseDouble(fields[3]), LocalDate.parse(fields[4]), fields[5], fields[6], Integer.parseInt(fields[1])));
                 } else {
-                    array.add(new Irasas(Double.valueOf(fields[3]), LocalDate.parse(fields[4]), fields[5], fields[5]));
+                    array.add(new Irasas(Double.parseDouble(fields[3]), LocalDate.parse(fields[4]), fields[5], fields[6]));
                 }
             }
 
         } catch (Exception e) {
-            System.out.println("ERROR: "+e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         }
         return array;
     }
+
+    public static ArrayList<Irasas> gautiDuomenisIsJson(String path) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        return mapper.readValue(new File(path), new TypeReference<>() {
+        });
+    }
+
 
     public static String gautiFailoAdresa(Scanner sc) {
         System.out.print("Įveskite failo adresą: ");

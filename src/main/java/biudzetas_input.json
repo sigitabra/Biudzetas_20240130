@@ -1,0 +1,13 @@
+[ {
+  "suma" : -1450.0,
+  "data" : [ 2024, 1, 5 ],
+  "mokejimoBudas" : "Pavedimas",
+  "papildomaInfo" : "komentaras",
+  "id" : 0
+}, {
+  "suma" : 20.0,
+  "data" : [ 2024, 1, 25 ],
+  "mokejimoBudas" : "Gryni",
+  "papildomaInfo" : "komentaras2",
+  "id" : 1
+} ]
